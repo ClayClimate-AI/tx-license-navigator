@@ -1,0 +1,26 @@
+# Secrets (never commit)
+.env
+.env.*
+!.env.example
+
+# Dependencies (install locally with npm)
+node_modules/
+
+# Build output (rebuild locally)
+dist/
+build/
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Optional local scratch
+*.tmp
+coverage/

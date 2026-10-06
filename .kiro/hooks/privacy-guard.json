@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Privacy guard: counts only",
+      "description": "Optional. After the agent saves a file in src/, warn if any personal TDLR column name appears in src/. Off by default; set enabled to true to use it.",
+      "trigger": "PostFileSave",
+      "matcher": "src/.*\\.(js|jsx)$",
+      "action": {
+        "type": "command",
+        "command": "if grep -rnE 'owner_name|owner_telephone|mailing_address|business_address|business_telephone|business_name|license_number|license_expiration' src; then echo 'Privacy guard: a personal TDLR field name appears in src/. Counts only: license_type, business_county, count(*).' >&2; exit 1; fi"
+      },
+      "timeout": 15,
+      "enabled": false
+    }
+  ]
+}
