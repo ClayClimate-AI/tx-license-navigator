@@ -100,7 +100,7 @@ render Markdown inside HTML table cells.
 classDef run   fill:#334155,color:#fff,stroke:#94a3b8
 classDef entry fill:#1d4ed8,color:#fff,stroke:#93c5fd
 classDef ui    fill:#15803d,color:#fff,stroke:#86efac
-classDef style fill:#c2410c,color:#fff,stroke:#fdba74
+classDef css   fill:#c2410c,color:#fff,stroke:#fdba74
 classDef tool  fill:#7e22ce,color:#fff,stroke:#d8b4fe
 classDef deps  fill:#a16207,color:#fff,stroke:#fde68a
 ```

@@ -128,10 +128,10 @@ flowchart TD
   B[Browser]:::run --> H[index.html<br/>front door]:::entry
   H --> M[src/main.jsx<br/>starts React]:::entry
   M --> A[src/App.jsx<br/>the page you see]:::ui
-  M --> C[src/index.css<br/>loads Tailwind]:::style
+  M --> C[src/index.css<br/>loads Tailwind]:::css
   V[vite.config.js<br/>engine settings]:::tool --> H
   V --> PR[plugin react]:::tool
-  V --> TW[tailwindcss vite]:::style
+  V --> TW[tailwindcss vite]:::css
   P[package.json<br/>tool list]:::deps --> V
   P --> R[react + react dom]:::ui
   L[package-lock.json<br/>exact versions]:::deps --> P
@@ -139,7 +139,7 @@ flowchart TD
   classDef run fill:#334155,color:#fff,stroke:#94a3b8
   classDef entry fill:#1d4ed8,color:#fff,stroke:#93c5fd
   classDef ui fill:#15803d,color:#fff,stroke:#86efac
-  classDef style fill:#c2410c,color:#fff,stroke:#fdba74
+  classDef css fill:#c2410c,color:#fff,stroke:#fdba74
   classDef tool fill:#7e22ce,color:#fff,stroke:#d8b4fe
   classDef deps fill:#a16207,color:#fff,stroke:#fde68a
 ```
