@@ -40,6 +40,7 @@ privacy-and-scope.md still holds: agents do not edit `PROMPT_LOG.md` on their ow
 | 🟧 | Style | `src/index.css`, `tailwindcss`, `@tailwindcss/vite` |
 | 🟪 | Build tools | `vite.config.js`, `vite`, `@vitejs/plugin-react` |
 | 🟨 | Dependencies | `package.json`, `package-lock.json` |
+| 🟫 | API | `src/api/tdlr.js` |
 
 - Put the dot in front of every file or package from this table, wherever it appears
   in a table cell: `🟩 <code>src/App.jsx</code>`.

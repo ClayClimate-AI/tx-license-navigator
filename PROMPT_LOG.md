@@ -10,7 +10,8 @@
 🟩 UI (<code>src/App.jsx</code>, <code>react</code>, <code>react-dom</code>)<br>
 🟧 Style (<code>src/index.css</code>, <code>tailwindcss</code>, <code>@tailwindcss/vite</code>)<br>
 🟪 Build tools (<code>vite.config.js</code>, <code>vite</code>, <code>@vitejs/plugin-react</code>)<br>
-🟨 Dependencies (<code>package.json</code>, <code>package-lock.json</code>)
+🟨 Dependencies (<code>package.json</code>, <code>package-lock.json</code>)<br>
+🟫 API (<code>src/api/tdlr.js</code>)
 
 ---
 
@@ -142,6 +143,87 @@ flowchart TD
   classDef css fill:#c2410c,color:#fff,stroke:#fdba74
   classDef tool fill:#7e22ce,color:#fff,stroke:#d8b4fe
   classDef deps fill:#a16207,color:#fff,stroke:#fde68a
+```
+
+---
+
+## Entry 3 · Task 2 fetch license types
+
+*Oct 6 · 20:27 to 20:48 CT*
+
+<table>
+  <tr><th align="left">Field</th><th align="left">Details</th></tr>
+  <tr><td><b>Tool</b></td><td>Kiro CLI · claude-opus-5.5</td></tr>
+  <tr><td><b>Asked</b></td><td>Task 2 only: create 🟫 <code>src/api/tdlr.js</code> with <code>buildTypesUrl()</code> and <code>fetchLicenseTypes()</code>, log the list from 🟩 <code>src/App.jsx</code>. No UI, no packages</td></tr>
+  <tr><td><b>Context</b></td><td>
+    <ul>
+      <li>steering (4 always-on files)</li>
+      <li><code>tasks.md</code></li>
+      <li><code>design.md</code></li>
+      <li><code>mvp-map.md</code></li>
+      <li>🟩 <code>src/App.jsx</code></li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Changed</b></td><td>
+    1 new file, 1 edited
+    <ul>
+      <li>🟫 <code>src/api/tdlr.js</code> (new)</li>
+      <li>🟩 <code>src/App.jsx</code> (modified)</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Decision</b></td><td>accepted</td></tr>
+  <tr><td><b>Verified</b></td><td>
+    <ul>
+      <li>~20:28 CT · <code>npm run build</code> passed</li>
+      <li>by 20:48 CT · browser console showed 50 types, A/C Technician 60809 and A/C Contractor 20436 as numbers</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Commit</b></td><td><code>5d1c56a</code> feat: fetch license types from TDLR</td></tr>
+  <tr><td><b>Reflection</b></td><td>I learned that the prompt wasn't made up on the spot. It came from our planning, and this step tested whether that plan held up. I checked the diff against my Watch for list (await, no $select=*, Number(), URLSearchParams) before accepting. I learned that response.json() parses JSON text into a JavaScript value (the opposite of stringify), and that holders still comes back as a string, which is why Number() is needed. I verified it myself: the console showed 50 types with A/C Technician 60809 and A/C Contractor 20436 as numbers. I caught that Kiro said quote() was unexported when the diff showed it exported. I also learned I don't need Postman for simple public GET requests; the browser and curl are enough here. I learned that fetch() returns a Promise, a placeholder for an answer that hasn't arrived yet. async/await lets the code pause and wait for it without freezing the page. fetch and response.json() both return Promises, which is why both need await. In App.jsx, .then() runs when the Promise succeeds and .catch() runs when it fails.</td></tr>
+  <tr><td><b>Explained</b></td><td>
+    <b>Entry 3 · Task 2 fetch license types</b>
+    <ul>
+      <li>What it is: a messenger file (tdlr.js) that goes to the TDLR website and asks, "How many people hold each license?" App.jsx sends the messenger once when the page opens.</li>
+      <li>Async: asking TDLR is like ordering food. You get a ticket (a Promise) right away, and the food comes later. "await" means wait for the food before eating. The page keeps working while it waits.</li>
+      <li>Why: the app needs the real list of license types before it can show a picker in Step 3.</li>
+      <li>Files
+        <ul>
+          <li>🟫 <code>tdlr.js</code>: builds the question (the URL), sends it, waits for the answer, turns the counts from words into numbers, and shouts if something breaks</li>
+          <li>🟩 <code>App.jsx</code>: tells the messenger to go once and writes the answer in the console</li>
+        </ul>
+      </li>
+      <li>Role in project: this is the pipe that brings real data into the app. The picker, the count card, and the error states all use it.</li>
+    </ul>
+  </td></tr>
+</table>
+
+### Entry 3 call graph
+
+```mermaid
+flowchart TD
+  A[src/App.jsx<br/>calls once on page load]:::ui --> F[fetchLicenseTypes<br/>fetches, checks status, converts holders to numbers]:::api
+  F --> U[buildTypesUrl<br/>builds the group and count query]:::api
+  F --> T[TDLR API<br/>data.texas.gov 7358-krk7]:::run
+
+  classDef run fill:#334155,color:#fff,stroke:#94a3b8
+  classDef ui fill:#15803d,color:#fff,stroke:#86efac
+  classDef api fill:#0f766e,color:#fff,stroke:#5eead4
+```
+
+### Entry 3 async sequence
+
+```mermaid
+sequenceDiagram
+  participant A as App.jsx
+  participant F as fetchLicenseTypes
+  participant T as TDLR API
+  A->>F: call (gets a Promise back right away)
+  F->>T: await fetch(url)
+  Note over A: page keeps running while waiting
+  T-->>F: response arrives
+  F->>F: await response.json() then Number()
+  F-->>A: Promise resolves with the list
+  A->>A: .then logs it, or .catch logs the error
 ```
 
 ---
