@@ -73,12 +73,14 @@ Parsing: `rows.length === 0` → `0`. Otherwise `Number(rows[0].holders)`. If th
 | `licenseTypes` | array of strings | `[]` | from `fetchLicenseTypes()` on mount |
 | `typesLoading` | boolean | `true` | select shows "Loading license types…" and is disabled |
 | `type` | string | `'A/C Technician'` | set after types load if present |
-| `county` | string | `''` | Title Case label from `src/data/counties.js` |
+| `county` | string | `''` | all caps `business_county` value (for example `HARRIS`); the Title Case label is looked up from `src/data/counties.js` only for display and saved in `result` as `countyLabel` |
 | `status` | `'idle' \| 'loading' \| 'success' \| 'empty' \| 'error'` | `'idle'` | drives StatusMessage and ResultCard |
-| `count` | number or null | `null` | |
+| `result` | `{ type, countyLabel, count, queryUrl }` or null | `null` | saved when a search finishes; shown in ResultCard |
 | `errorCode` | number or null | `null` | `null` + error status means no connection |
 | `fieldError` | string or null | `null` | "Choose a county." |
-| `lastQueryUrl` | string | `''` | shown in ResultCard |
+
+The result card reads only from `result`, so the heading, number, and link always describe
+the same search, even if a dropdown changes afterward.
 
 ## The 5 UI states (from the UI UX sample States board)
 
