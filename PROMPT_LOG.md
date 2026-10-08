@@ -269,7 +269,14 @@ sequenceDiagram
   </td></tr>
   <tr><td><b>Commit</b></td><td><code>3c6d7ae</code> feat: license picker from live TDLR data</td></tr>
   <tr><td><b>Reflection</b></td><td>I built the license picker so the job list comes from live TDLR data, not a typed list. I proved it by blocking the API call in DevTools and watching the job box go empty. My first Offline test failed because it blocked my own page too, so I learned to block only the one request. Kiro deleted the dist folder against the rules and told me about it, which led me to add a report format so problems always show up in their own section.</td></tr>
-  <tr><td><b>Explained</b></td><td>The app has two boxes, one for the job and one for the county. When the page opens, it asks Texas's website for the job list, so the list is always real. Counties show up nicely, like "Harris," but the app sends "HARRIS" because that's how the data stores them. If you click without picking a county, the app asks you to choose one first.</td></tr>
+  <tr><td><b>Explained</b></td><td>
+    <ul>
+      <li>The app has two boxes, one for the job and one for the county.</li>
+      <li>When the page opens, it asks Texas's website for the job list, so the list is always real.</li>
+      <li>Counties show up nicely, like "Harris," but the app sends "HARRIS" because that's how the data stores them.</li>
+      <li>If you click without picking a county, the app asks you to choose one first.</li>
+    </ul>
+  </td></tr>
 </table>
 
 ### Entry 4 call graph
