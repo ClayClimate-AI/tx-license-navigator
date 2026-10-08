@@ -48,9 +48,16 @@ export async function fetchLicenseTypes() {
 // business_county is stored in ALL CAPS, so the county is upper cased here no matter
 // what the caller passes.
 export function buildCountUrl(type, county) {
+  // Dev only: ?break=column on the page URL asks for a column that does not exist, so the
+  // API answers HTTP 400 and the error state can be shown on purpose in the demo.
+  const breakColumn =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('break') === 'column'
+  const countyColumn = breakColumn ? 'business_countyy' : 'business_county'
+
   const params = new URLSearchParams({
     $select: 'count(*) AS holders',
-    $where: `license_type=${quote(type)} AND business_county=${quote(String(county).toUpperCase())}`,
+    $where: `license_type=${quote(type)} AND ${countyColumn}=${quote(String(county).toUpperCase())}`,
   })
   return `${DATASET_URL}?${params}`
 }

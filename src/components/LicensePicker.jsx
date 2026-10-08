@@ -91,7 +91,7 @@ export default function LicensePicker({
       </fieldset>
 
       <button type="submit" className="border" disabled={busy}>
-        Show license count
+        {busy ? 'Checking…' : 'Show license count'}
       </button>
     </form>
   )

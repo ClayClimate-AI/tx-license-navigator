@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { buildCountUrl, fetchHolderCount, fetchLicenseTypes } from './api/tdlr.js'
 import LicensePicker from './components/LicensePicker.jsx'
 import ResultCard from './components/ResultCard.jsx'
+import StatusMessage from './components/StatusMessage.jsx'
 import { COUNTIES } from './data/counties.js'
 
 const DEFAULT_TYPE = 'A/C Technician'
@@ -12,86 +13,123 @@ export default function App() {
   const [type, setType] = useState('')
   const [county, setCounty] = useState('')
   const [fieldError, setFieldError] = useState(null)
-  // Temporary flags for task 4. Task 5 replaces them with the single status value.
-  const [checking, setChecking] = useState(false)
-  const [countError, setCountError] = useState(null)
-  // Snapshot of the search that produced the number, so the heading stays correct
+  const [status, setStatus] = useState('idle')
+  // null together with status 'error' means the request never got an answer (no connection).
+  const [errorCode, setErrorCode] = useState(null)
+  // Snapshot of the search that produced the panel, so the heading stays correct
   // even if the visitor changes a select afterwards.
   const [result, setResult] = useState(null)
+  // The last search that was sent, so Try again repeats exactly that search.
+  const [lastSearch, setLastSearch] = useState(null)
 
-  useEffect(() => {
-    // Ignore flag so React StrictMode's double effect run in dev only applies one result.
-    let ignore = false
+  const loadTypes = useCallback((isIgnored = () => false) => {
+    // Requirement 2.6: the loading state also covers the license type request.
+    setTypesLoading(true)
+    setStatus('loading')
     fetchLicenseTypes()
       .then((types) => {
-        if (ignore) return
+        if (isIgnored()) return
         const names = types.map((t) => t.licenseType)
         setLicenseTypes(names)
         // Set the default only after the list arrives, so it always matches a real option.
         setType(names.includes(DEFAULT_TYPE) ? DEFAULT_TYPE : (names[0] ?? ''))
+        setErrorCode(null)
+        setStatus('idle')
       })
       .catch((err) => {
-        // The full error state for this arrives in task 5.
-        if (!ignore) console.error('License types failed:', err.status, err.message)
+        if (isIgnored()) return
+        setErrorCode(err.status ?? null)
+        setStatus('error')
       })
       .finally(() => {
-        if (!ignore) setTypesLoading(false)
+        if (!isIgnored()) setTypesLoading(false)
       })
+  }, [])
+
+  useEffect(() => {
+    // Ignore flag so React StrictMode's double effect run in dev only applies one result.
+    let ignore = false
+    loadTypes(() => ignore)
     return () => {
       ignore = true
     }
-  }, [])
+  }, [loadTypes])
 
   function handleCountyChange(value) {
     setCounty(value)
     if (value) setFieldError(null)
   }
 
-  async function handleSubmit() {
+  async function runSearch(searchType, searchCounty) {
+    setLastSearch({ type: searchType, county: searchCounty })
+    setResult(null)
+    setErrorCode(null)
+    setStatus('loading')
+
+    const countyLabel = COUNTIES.find((c) => c.value === searchCounty)?.label ?? searchCounty
+    const queryUrl = buildCountUrl(searchType, searchCounty)
+    try {
+      const count = await fetchHolderCount(searchType, searchCounty)
+      setResult({ type: searchType, countyLabel, count, queryUrl })
+      // fetchHolderCount returns 0 for both [] and "0", so one check covers both.
+      setStatus(count === 0 ? 'empty' : 'success')
+    } catch (err) {
+      setErrorCode(err.status ?? null)
+      setStatus('error')
+    }
+  }
+
+  function handleSubmit() {
     if (!county) {
       setFieldError('Choose a county.')
       return
     }
     setFieldError(null)
-    setCountError(null)
-    setResult(null)
-    setChecking(true)
+    runSearch(type, county)
+  }
 
-    const countyLabel = COUNTIES.find((c) => c.value === county)?.label ?? county
-    const queryUrl = buildCountUrl(type, county)
-    try {
-      const count = await fetchHolderCount(type, county)
-      setResult({ type, countyLabel, count, queryUrl })
-    } catch (err) {
-      setCountError(err.status ?? 'no connection')
-    } finally {
-      setChecking(false)
+  function handleRetry() {
+    // If the license type list never loaded, retry that first; otherwise repeat the search.
+    if (licenseTypes.length === 0) {
+      loadTypes()
+    } else if (lastSearch) {
+      runSearch(lastSearch.type, lastSearch.county)
     }
   }
+
+  // Requirement 2.5: never show an empty, unusable form when the type list failed.
+  const typesFailed = !typesLoading && licenseTypes.length === 0
 
   return (
     <main>
       <h1 className="text-3xl">Texas Second Chance License Navigator</h1>
-      <LicensePicker
-        types={licenseTypes}
-        type={type}
-        county={county}
-        onTypeChange={setType}
-        onCountyChange={handleCountyChange}
-        onSubmit={handleSubmit}
-        busy={typesLoading || checking}
-        fieldError={fieldError}
-      />
-      {checking && <p>Checking…</p>}
-      {countError !== null && <p>We could not reach the Texas data service. (error {countError})</p>}
-      {result && (
-        <ResultCard
-          type={result.type}
-          county={result.countyLabel}
-          count={result.count}
-          queryUrl={result.queryUrl}
+      {!typesFailed && (
+        <LicensePicker
+          types={licenseTypes}
+          type={type}
+          county={county}
+          onTypeChange={setType}
+          onCountyChange={handleCountyChange}
+          onSubmit={handleSubmit}
+          busy={typesLoading || status === 'loading'}
+          fieldError={fieldError}
         />
       )}
+      <StatusMessage
+        status={status}
+        type={result?.type}
+        county={result?.countyLabel}
+        errorCode={errorCode}
+      />
+      <ResultCard
+        status={status}
+        type={result?.type}
+        county={result?.countyLabel}
+        count={result?.count}
+        queryUrl={result?.queryUrl}
+        errorCode={errorCode}
+        onRetry={handleRetry}
+      />
     </main>
   )
 }
