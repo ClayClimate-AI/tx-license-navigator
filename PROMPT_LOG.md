@@ -7,7 +7,7 @@
 ## Legend
 
 🟦 Entry (<code>index.html</code>, <code>src/main.jsx</code>)<br>
-🟩 UI (<code>src/App.jsx</code>, <code>src/components/LicensePicker.jsx</code>, <code>src/data/counties.js</code>, <code>src/components/ResultCard.jsx</code>, <code>react</code>, <code>react-dom</code>)<br>
+🟩 UI (<code>src/App.jsx</code>, <code>src/components/LicensePicker.jsx</code>, <code>src/data/counties.js</code>, <code>src/components/ResultCard.jsx</code>, <code>src/components/StatusMessage.jsx</code>, <code>react</code>, <code>react-dom</code>)<br>
 🟧 Style (<code>src/index.css</code>, <code>tailwindcss</code>, <code>@tailwindcss/vite</code>)<br>
 🟪 Build tools (<code>vite.config.js</code>, <code>vite</code>, <code>@vitejs/plugin-react</code>)<br>
 🟨 Dependencies (<code>package.json</code>, <code>package-lock.json</code>)<br>
@@ -398,6 +398,97 @@ flowchart TD
   F --> T[TDLR API<br/>data.texas.gov 7358-krk7]:::run
   A --> C[src/data/counties.js<br/>finds the Title Case label]:::ui
   A --> R[src/components/ResultCard.jsx<br/>heading, number with commas, sentence, exact URL]:::ui
+
+  classDef run fill:#334155,color:#fff,stroke:#94a3b8
+  classDef ui fill:#15803d,color:#fff,stroke:#86efac
+  classDef api fill:#78350f,color:#fff,stroke:#d6a77a
+```
+
+---
+
+## Entry 6 · Task 5 loading, empty, and error states
+
+*Oct 8 · ~14:47 to ~15:17 CT*
+
+<table>
+  <tr><th align="left">Field</th><th align="left">Details</th></tr>
+  <tr><td><b>Tool</b></td><td>Kiro CLI · claude-opus-5.5 · supervised</td></tr>
+  <tr><td><b>Asked</b></td><td>Full Step 5 prompt from <code>docs/prompts.md</code>. Task 5 only: five statuses, 🟩 <code>src/components/StatusMessage.jsx</code>, five panels in 🟩 <code>src/components/ResultCard.jsx</code>, empty for <code>[]</code> and 0, "Checking…" on the button, dev switch <code>break=column</code>. Stop after the diff</td></tr>
+  <tr><td><b>Context</b></td><td>
+    <ul>
+      <li>steering (always on files)</li>
+      <li><code>requirements.md</code></li>
+      <li><code>design.md</code> (updated first in <code>9d1d8d4</code> so state matches the result bundle)</li>
+      <li><code>tasks.md</code></li>
+      <li><code>mvp-map.md</code></li>
+      <li><code>ui-reference.md</code></li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Changed</b></td><td>
+    1 new file, 4 edited · 182 insertions, 61 deletions
+    <ul>
+      <li>🟩 <code>src/App.jsx</code> (modified)</li>
+      <li>🟫 <code>src/api/tdlr.js</code> (modified)</li>
+      <li>🟩 <code>src/components/LicensePicker.jsx</code> (modified)</li>
+      <li>🟩 <code>src/components/ResultCard.jsx</code> (modified)</li>
+      <li>🟩 <code>src/components/StatusMessage.jsx</code> (new)</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Decision</b></td><td>accepted. Kiro also changed 🟩 <code>src/components/LicensePicker.jsx</code>, which was not in my file list, to make the button say "Checking…" while loading. It listed the file under Changed, not under Problems</td></tr>
+  <tr><td><b>Verified</b></td><td>
+    <ul>
+      <li>by 15:05 CT · <code>npm run build</code> passed</li>
+      <li>~15:09 CT · Loving JSON holders "0", card "No matching records found"</li>
+      <li>~15:11 CT · <code>?break=column</code> showed "(error 400)", network row 400</li>
+      <li>~15:13 CT · blocked request showed "(no connection)", choices kept</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Commit</b></td><td><code>6791143</code> feat: loading, empty, and error states</td></tr>
+  <tr><td><b>Reflection</b></td><td>
+    <ul>
+      <li>I updated <code>design.md</code> before this task so Kiro would build from the result bundle, not the old count and lastQueryUrl plan. That commit is <code>9d1d8d4</code>.</li>
+      <li>I used the full Step 5 prompt from <code>prompts.md</code>, with the spec and reference files attached, in a fresh session. Kiro stopped after the diff and did not commit.</li>
+      <li>It also changed 🟩 <code>LicensePicker.jsx</code>, which was not in my file list. It listed that file under Changed, not Problems, because the button says "Checking…" while loading. I accepted it.</li>
+      <li>I ran the checks myself. Loving returned holders "0" and the card said "No matching records found", not an error. With ?break=column the card showed "(error 400)" and the network row was 400.</li>
+      <li>My first "(no connection)" was still on ?break=column, so I redid it on the base URL. Blocking only the count request showed "(no connection)", and my choices stayed.</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Explained</b></td><td>
+    <b>Entry 6 · Task 5 loading, empty, and error states</b>
+    <ul>
+      <li>What it is: the card now has five moods. Waiting, checking, a real count, no records, and something broke.</li>
+      <li>Why: a count of 0 is not a failure. Loving has no A/C Technicians, and the app says so instead of looking broken. A real failure says it is our side, keeps your choices, and offers Try again.</li>
+      <li>Files:
+        <ul>
+          <li>🟩 <code>App.jsx</code> holds the status (idle, loading, success, empty, or error) plus the error code.</li>
+          <li>🟩 <code>StatusMessage.jsx</code> is the one line a screen reader hears.</li>
+          <li>🟩 <code>ResultCard.jsx</code> shows the matching panel for each mood.</li>
+          <li>🟩 <code>LicensePicker.jsx</code> disables the button and says "Checking…" while it waits.</li>
+          <li>🟫 <code>tdlr.js</code> has a dev switch. ?break=column asks for a fake column so the API returns 400.</li>
+        </ul>
+      </li>
+      <li>Role in the project: Step 6 only styles this. The states stay as they are.</li>
+    </ul>
+  </td></tr>
+</table>
+
+### Entry 6 call graph
+
+```mermaid
+flowchart TD
+  A[src/App.jsx<br/>owns status, errorCode, result, lastSearch]:::ui --> LT[loadTypes<br/>loads the type list, sets loading then idle or error]:::ui
+  LT --> FT[fetchLicenseTypes in tdlr.js<br/>type list request]:::api
+  A --> P[src/components/LicensePicker.jsx<br/>button disabled and says Checking while busy]:::ui
+  P -->|submit| RS[runSearch in App.jsx<br/>loading, then success, empty for 0, or error]:::ui
+  RS --> U[buildCountUrl in tdlr.js<br/>dev switch break=column uses a bad column for HTTP 400]:::api
+  RS --> F[fetchHolderCount in tdlr.js<br/>returns 0 for an empty list or a count of 0]:::api
+  FT --> T[TDLR API<br/>data.texas.gov 7358-krk7]:::run
+  F --> T
+  A --> S[src/components/StatusMessage.jsx<br/>one line in role status, aria-live polite]:::ui
+  A --> R[src/components/ResultCard.jsx<br/>idle, loading, success, empty, error panels]:::ui
+  R -->|Try again| RT[handleRetry in App.jsx<br/>reloads types or repeats lastSearch]:::ui
+  RT --> LT
+  RT --> RS
 
   classDef run fill:#334155,color:#fff,stroke:#94a3b8
   classDef ui fill:#15803d,color:#fff,stroke:#86efac
