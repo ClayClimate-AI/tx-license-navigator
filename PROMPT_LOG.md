@@ -7,7 +7,7 @@
 ## Legend
 
 🟦 Entry (<code>index.html</code>, <code>src/main.jsx</code>)<br>
-🟩 UI (<code>src/App.jsx</code>, <code>src/components/LicensePicker.jsx</code>, <code>src/data/counties.js</code>, <code>react</code>, <code>react-dom</code>)<br>
+🟩 UI (<code>src/App.jsx</code>, <code>src/components/LicensePicker.jsx</code>, <code>src/data/counties.js</code>, <code>src/components/ResultCard.jsx</code>, <code>react</code>, <code>react-dom</code>)<br>
 🟧 Style (<code>src/index.css</code>, <code>tailwindcss</code>, <code>@tailwindcss/vite</code>)<br>
 🟪 Build tools (<code>vite.config.js</code>, <code>vite</code>, <code>@vitejs/plugin-react</code>)<br>
 🟨 Dependencies (<code>package.json</code>, <code>package-lock.json</code>)<br>
@@ -287,6 +287,79 @@ flowchart TD
   P --> C[src/data/counties.js<br/>Title Case labels, all caps API values]:::ui
   A --> F[fetchLicenseTypes in tdlr.js<br/>loads the license type list]:::api
   F --> T[TDLR API<br/>data.texas.gov 7358-krk7]:::run
+
+  classDef run fill:#334155,color:#fff,stroke:#94a3b8
+  classDef ui fill:#15803d,color:#fff,stroke:#86efac
+  classDef api fill:#78350f,color:#fff,stroke:#d6a77a
+```
+
+---
+
+## Entry 5 · Task 4 holder count and result card
+
+*Oct 8 · ~12:30 to ~12:50 CT*
+
+<table>
+  <tr><th align="left">Field</th><th align="left">Details</th></tr>
+  <tr><td><b>Tool</b></td><td>Kiro CLI · claude-opus-5.5 · supervised</td></tr>
+  <tr><td><b>Asked</b></td><td>Full Step 4 prompt from <code>docs/prompts.md</code>. Task 4 only: <code>buildCountUrl</code> and <code>fetchHolderCount</code> in 🟫 <code>src/api/tdlr.js</code>, new 🟩 <code>src/components/ResultCard.jsx</code>, wire submit in 🟩 <code>src/App.jsx</code> with "Checking…". Stop after the diff, no commit</td></tr>
+  <tr><td><b>Context</b></td><td>
+    <ul>
+      <li>steering (always on files)</li>
+      <li><code>requirements.md</code></li>
+      <li><code>design.md</code></li>
+      <li><code>tasks.md</code></li>
+      <li><code>mvp-map.md</code></li>
+      <li><code>ui-reference.md</code></li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Changed</b></td><td>
+    1 new file, 2 edited · 96 insertions, 4 deletions
+    <ul>
+      <li>🟫 <code>src/api/tdlr.js</code> (modified)</li>
+      <li>🟩 <code>src/components/ResultCard.jsx</code> (new)</li>
+      <li>🟩 <code>src/App.jsx</code> (modified)</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Decision</b></td><td>accepted, with one deviation Kiro flagged under Problems: one result object (type, county, count, URL) instead of separate <code>count</code> and <code>lastQueryUrl</code> state from <code>design.md</code>. Accepted so the heading and number always describe the same search</td></tr>
+  <tr><td><b>Verified</b></td><td>
+    <ul>
+      <li>by 12:39 CT · <code>npm run build</code> passed</li>
+      <li>~12:48 CT · app card showed 12,095 for A/C Technician in Harris</li>
+      <li>~12:49 CT · URL in the card matched the URL Kiro printed</li>
+      <li>~12:50 CT · browser JSON returned holders "12095"</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Commit</b></td><td><code>8d3db72</code> feat: holder count and result card</td></tr>
+  <tr><td><b>Reflection</b></td><td>This time I followed the guide: a fresh session, the full Step 4 prompt from prompts.md, and the five spec and reference files attached with @ tags. In Step 3 I had used a short prompt. Kiro stopped after the diff and did not commit. Because of my report format, it flagged its own deviation under Problems. The design called for separate count and lastQueryUrl state, but Kiro used one result bundle holding the type, county, count, and URL. I did not like that it went off spec, so I had the choice broken down in plain words before deciding. With separate state, the heading reads the dropdowns. If I searched Harris and then switched to Dallas, Harris's number would sit under a Dallas label. The bundle keeps each search's label and number together, so I accepted it. I still want the spec to match the code, so I plan to note it in design.md. I verified it myself: the card showed 12,095, the URL in the card matched the one Kiro printed, and the browser JSON returned "12095" as a string. That showed Number() and toLocaleString() did their jobs. I used my outside assistant for the step plan and to explain Kiro's choice, then made the call myself.</td></tr>
+  <tr><td><b>Explained</b></td><td>
+    <b>Entry 5 · Task 4 holder count and result card</b>
+    <ul>
+      <li>What it is: the app finally answers the question. You pick a job and a county, press the button, and a card shows how many people hold that license there.</li>
+      <li>The bundle: when an answer comes back, the app packs the job, county, number, and link into one box and shows that box. It's like a receipt: it shows what you ordered, even if you start looking at the menu again.</li>
+      <li>Why: before this, the picker had nothing to show. Now the count is the main result of the whole app.</li>
+      <li>Files:
+        <ul>
+          <li>🟫 <code>tdlr.js</code> builds the count question, sends it, and turns the answer from text into a number.</li>
+          <li>🟩 <code>ResultCard.jsx</code> is the card: heading, big number with a comma, the reminder that a count is not a job listing, and the exact link used.</li>
+          <li>🟩 <code>App.jsx</code> connects the button to the fetch, shows "Checking…" while waiting, and keeps the bundle.</li>
+        </ul>
+      </li>
+    </ul>
+  </td></tr>
+</table>
+
+### Entry 5 call graph
+
+```mermaid
+flowchart TD
+  P[src/components/LicensePicker.jsx<br/>submit calls onSubmit]:::ui --> A[src/App.jsx handleSubmit<br/>checks county, sets checking, saves result or error]:::ui
+  A --> U[buildCountUrl in tdlr.js<br/>count query, quoted values, county upper case]:::api
+  A --> F[fetchHolderCount in tdlr.js<br/>fetches, checks status, returns Number or 0]:::api
+  F --> U
+  F --> T[TDLR API<br/>data.texas.gov 7358-krk7]:::run
+  A --> C[src/data/counties.js<br/>finds the Title Case label]:::ui
+  A --> R[src/components/ResultCard.jsx<br/>heading, number with commas, sentence, exact URL]:::ui
 
   classDef run fill:#334155,color:#fff,stroke:#94a3b8
   classDef ui fill:#15803d,color:#fff,stroke:#86efac
