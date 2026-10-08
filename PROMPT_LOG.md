@@ -7,7 +7,7 @@
 ## Legend
 
 🟦 Entry (<code>index.html</code>, <code>src/main.jsx</code>)<br>
-🟩 UI (<code>src/App.jsx</code>, <code>react</code>, <code>react-dom</code>)<br>
+🟩 UI (<code>src/App.jsx</code>, <code>src/components/LicensePicker.jsx</code>, <code>src/data/counties.js</code>, <code>react</code>, <code>react-dom</code>)<br>
 🟧 Style (<code>src/index.css</code>, <code>tailwindcss</code>, <code>@tailwindcss/vite</code>)<br>
 🟪 Build tools (<code>vite.config.js</code>, <code>vite</code>, <code>@vitejs/plugin-react</code>)<br>
 🟨 Dependencies (<code>package.json</code>, <code>package-lock.json</code>)<br>
@@ -179,7 +179,7 @@ flowchart TD
     </ul>
   </td></tr>
   <tr><td><b>Commit</b></td><td><code>5d1c56a</code> feat: fetch license types from TDLR</td></tr>
-  <tr><td><b>Reflection</b></td><td>I learned that the prompt wasn't made up on the spot. It came from our planning, and this step tested whether that plan held up. I checked the diff against my Watch for list (await, no $select=*, Number(), URLSearchParams) before accepting. I learned that response.json() parses JSON text into a JavaScript value (the opposite of stringify), and that holders still comes back as a string, which is why Number() is needed. I verified it myself: the console showed 50 types with A/C Technician 60809 and A/C Contractor 20436 as numbers. I caught that Kiro said quote() was unexported when the diff showed it exported. I also learned I don't need Postman for simple public GET requests; the browser and curl are enough here. I learned that fetch() returns a Promise, a placeholder for an answer that hasn't arrived yet. async/await lets the code pause and wait for it without freezing the page. fetch and response.json() both return Promises, which is why both need await. In App.jsx, .then() runs when the Promise succeeds and .catch() runs when it fails.</td></tr>
+  <tr><td><b>Reflection</b></td><td>I learned that the prompt wasn't made up on the spot. It came from our planning, and this step tested whether that plan held up. I checked the diff against my Watch for list (await, no $select=*, Number(), URLSearchParams) before accepting. I learned that response.json() parses JSON text into a JavaScript value (the opposite of stringify), and that holders still comes back as a string, which is why Number() is needed. I verified it myself: the console showed 50 types with A/C Technician 60809 and A/C Contractor 20436 as numbers. I noticed the first draft exported quote(), but it was removed before the build. I checked the committed file with git show to confirm what actually shipped. I also learned I don't need Postman for simple public GET requests; the browser and curl are enough here. I learned that fetch() returns a Promise, a placeholder for an answer that hasn't arrived yet. async/await lets the code pause and wait for it without freezing the page. fetch and response.json() both return Promises, which is why both need await. In App.jsx, .then() runs when the Promise succeeds and .catch() runs when it fails.</td></tr>
   <tr><td><b>Explained</b></td><td>
     <b>Entry 3 · Task 2 fetch license types</b>
     <ul>
@@ -207,7 +207,7 @@ flowchart TD
 
   classDef run fill:#334155,color:#fff,stroke:#94a3b8
   classDef ui fill:#15803d,color:#fff,stroke:#86efac
-  classDef api fill:#0f766e,color:#fff,stroke:#5eead4
+  classDef api fill:#78350f,color:#fff,stroke:#d6a77a
 ```
 
 ### Entry 3 async sequence
@@ -224,6 +224,66 @@ sequenceDiagram
   F->>F: await response.json() then Number()
   F-->>A: Promise resolves with the list
   A->>A: .then logs it, or .catch logs the error
+```
+
+---
+
+## Entry 4 · Task 3 license picker
+
+*Oct 7 · by 20:53 CT*
+
+<table>
+  <tr><th align="left">Field</th><th align="left">Details</th></tr>
+  <tr><td><b>Tool</b></td><td>Kiro CLI · claude-opus-5.5 · supervised</td></tr>
+  <tr><td><b>Asked</b></td><td>"Go on task 3. Also tick tasks 1 and 2 in tasks.md. Counties display in Title Case but the value sent to the API must be the all caps business_county value. Supervised, show the diff, do not commit."</td></tr>
+  <tr><td><b>Context</b></td><td>
+    <ul>
+      <li><code>tasks.md</code> task 3</li>
+      <li>🟫 <code>src/api/tdlr.js</code></li>
+      <li>verified fact: <code>business_county</code> values are all caps</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Changed</b></td><td>
+    2 new files, 1 edited
+    <ul>
+      <li>🟩 <code>src/App.jsx</code> (modified)</li>
+      <li>🟩 <code>src/components/LicensePicker.jsx</code> (new)</li>
+      <li>🟩 <code>src/data/counties.js</code> (new)</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Decision</b></td><td>
+    <ul>
+      <li>keep Loving as the empty state test case</li>
+      <li>keep A/C CE Provider out of the HVAC group</li>
+      <li>send county values in caps</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Verified</b></td><td>
+    <ul>
+      <li>~20:50 CT · <code>npm run build</code> passed</li>
+      <li>~20:50 CT · no <code>console.log</code> in <code>src/</code></li>
+      <li>~20:50 CT · curl: all 13 county values exist in the live API</li>
+      <li>~20:50 CT · curl A/C Technician + LOVING = 0</li>
+      <li>~20:50 CT · curl: A/C CE Provider is a real type, kept out of the HVAC group by exact match</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Commit</b></td><td><code>3c6d7ae</code> feat: license picker from live TDLR data</td></tr>
+  <tr><td><b>Reflection</b></td><td>I built the license picker so the job list comes from live TDLR data, not a typed list. I proved it by blocking the API call in DevTools and watching the job box go empty. My first Offline test failed because it blocked my own page too, so I learned to block only the one request. Kiro deleted the dist folder against the rules and told me about it, which led me to add a report format so problems always show up in their own section.</td></tr>
+  <tr><td><b>Explained</b></td><td>The app has two boxes, one for the job and one for the county. When the page opens, it asks Texas's website for the job list, so the list is always real. Counties show up nicely, like "Harris," but the app sends "HARRIS" because that's how the data stores them. If you click without picking a county, the app asks you to choose one first.</td></tr>
+</table>
+
+### Entry 4 call graph
+
+```mermaid
+flowchart TD
+  A[src/App.jsx<br/>holds type, county, and field error]:::ui --> P[src/components/LicensePicker.jsx<br/>form with two selects and the submit button]:::ui
+  P --> C[src/data/counties.js<br/>Title Case labels, all caps API values]:::ui
+  A --> F[fetchLicenseTypes in tdlr.js<br/>loads the license type list]:::api
+  F --> T[TDLR API<br/>data.texas.gov 7358-krk7]:::run
+
+  classDef run fill:#334155,color:#fff,stroke:#94a3b8
+  classDef ui fill:#15803d,color:#fff,stroke:#86efac
+  classDef api fill:#78350f,color:#fff,stroke:#d6a77a
 ```
 
 ---
