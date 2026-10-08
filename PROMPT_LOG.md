@@ -55,7 +55,14 @@
     </ul>
   </td></tr>
   <tr><td><b>Commit</b></td><td>none</td></tr>
-  <tr><td><b>Reflection</b></td><td>I learned to load context before asking for code: steering, spec, then reference docs. I asked how # chips in the panel differ from @ tags in the CLI, and moved to the CLI after the panel crashed. The read only pass caught 7 unclear spec items before any code was written. I also learned git init has to come before the first commit, and that this assignment needs no branching, so I stayed on main.</td></tr>
+  <tr><td><b>Reflection</b></td><td>
+    <ul>
+      <li>I learned to load context before asking for code: steering, spec, then reference docs.</li>
+      <li>I asked how # chips in the panel differ from @ tags in the CLI, and moved to the CLI after the panel crashed.</li>
+      <li>The read only pass caught 7 unclear spec items before any code was written.</li>
+      <li>I also learned git init has to come before the first commit, and that this assignment needs no branching, so I stayed on main.</li>
+    </ul>
+  </td></tr>
   <tr><td><b>Explained</b></td><td>
     <b>Entry 1 · Warm up (nothing changed)</b>
     <ul>
@@ -101,7 +108,14 @@
     </ul>
   </td></tr>
   <tr><td><b>Commit</b></td><td><code>c3f0aad</code> chore: scaffold vite react tailwind</td></tr>
-  <tr><td><b>Reflection</b></td><td>Before committing, I wanted to be sure only the right files got pushed, so I set up a grouped .gitignore that keeps secrets, node_modules, and builds out. I reviewed the diff before I accepted it and checked that the page loaded myself. I asked whether the log template matched the assignment and found the rewrite had dropped the lesson asks, so I added them back. Next time I want to read the diff more closely before I approve.</td></tr>
+  <tr><td><b>Reflection</b></td><td>
+    <ul>
+      <li>Before committing, I wanted to be sure only the right files got pushed, so I set up a grouped <code>.gitignore</code> that keeps secrets, <code>node_modules</code>, and builds out.</li>
+      <li>I reviewed the diff before I accepted it and checked that the page loaded myself.</li>
+      <li>I asked whether the log template matched the assignment and found the rewrite had dropped the lesson asks, so I added them back.</li>
+      <li>Next time I want to read the diff more closely before I approve.</li>
+    </ul>
+  </td></tr>
   <tr><td><b>Explained</b></td><td>
     <b>Entry 2 · Task 1 scaffold (7 new files)</b>
     <ul>
@@ -179,7 +193,17 @@ flowchart TD
     </ul>
   </td></tr>
   <tr><td><b>Commit</b></td><td><code>5d1c56a</code> feat: fetch license types from TDLR</td></tr>
-  <tr><td><b>Reflection</b></td><td>I learned that the prompt wasn't made up on the spot. It came from our planning, and this step tested whether that plan held up. I checked the diff against my Watch for list (await, no $select=*, Number(), URLSearchParams) before accepting. I learned that response.json() parses JSON text into a JavaScript value (the opposite of stringify), and that holders still comes back as a string, which is why Number() is needed. I verified it myself: the console showed 50 types with A/C Technician 60809 and A/C Contractor 20436 as numbers. I noticed the first draft exported quote(), but it was removed before the build. I checked the committed file with git show to confirm what actually shipped. I also learned I don't need Postman for simple public GET requests; the browser and curl are enough here. I learned that fetch() returns a Promise, a placeholder for an answer that hasn't arrived yet. async/await lets the code pause and wait for it without freezing the page. fetch and response.json() both return Promises, which is why both need await. In App.jsx, .then() runs when the Promise succeeds and .catch() runs when it fails.</td></tr>
+  <tr><td><b>Reflection</b></td><td>
+    <ul>
+      <li>I learned that the prompt wasn't made up on the spot. It came from our planning, and this step tested whether that plan held up.</li>
+      <li>I checked the diff against my Watch for list (await, no $select=*, Number(), URLSearchParams) before accepting.</li>
+      <li>I learned that response.json() parses JSON text into a JavaScript value (the opposite of stringify), and that holders still comes back as a string, which is why Number() is needed.</li>
+      <li>I verified it myself: the console showed 50 types with A/C Technician 60809 and A/C Contractor 20436 as numbers.</li>
+      <li>I noticed the first draft exported quote(), but it was removed before the build. I checked the committed file with git show to confirm what actually shipped.</li>
+      <li>I also learned I don't need Postman for simple public GET requests; the browser and curl are enough here.</li>
+      <li>I learned that fetch() returns a Promise, a placeholder for an answer that hasn't arrived yet. async/await lets the code pause and wait for it without freezing the page. fetch and response.json() both return Promises, which is why both need await. In 🟩 <code>App.jsx</code>, .then() runs when the Promise succeeds and .catch() runs when it fails.</li>
+    </ul>
+  </td></tr>
   <tr><td><b>Explained</b></td><td>
     <b>Entry 3 · Task 2 fetch license types</b>
     <ul>
@@ -268,7 +292,13 @@ sequenceDiagram
     </ul>
   </td></tr>
   <tr><td><b>Commit</b></td><td><code>3c6d7ae</code> feat: license picker from live TDLR data</td></tr>
-  <tr><td><b>Reflection</b></td><td>I built the license picker so the job list comes from live TDLR data, not a typed list. I proved it by blocking the API call in DevTools and watching the job box go empty. My first Offline test failed because it blocked my own page too, so I learned to block only the one request. Kiro deleted the dist folder against the rules and told me about it, which led me to add a report format so problems always show up in their own section.</td></tr>
+  <tr><td><b>Reflection</b></td><td>
+    <ul>
+      <li>I built the license picker so the job list comes from live TDLR data, not a typed list.</li>
+      <li>I proved it by blocking the API call in DevTools and watching the job box go empty. My first Offline test failed because it blocked my own page too, so I learned to block only the one request.</li>
+      <li>Kiro deleted the <code>dist</code> folder against the rules and told me about it, which led me to add a report format so problems always show up in their own section.</li>
+    </ul>
+  </td></tr>
   <tr><td><b>Explained</b></td><td>
     <ul>
       <li>The app has two boxes, one for the job and one for the county.</li>
@@ -331,7 +361,15 @@ flowchart TD
     </ul>
   </td></tr>
   <tr><td><b>Commit</b></td><td><code>8d3db72</code> feat: holder count and result card</td></tr>
-  <tr><td><b>Reflection</b></td><td>This time I followed the guide: a fresh session, the full Step 4 prompt from prompts.md, and the five spec and reference files attached with @ tags. In Step 3 I had used a short prompt. Kiro stopped after the diff and did not commit. Because of my report format, it flagged its own deviation under Problems. The design called for separate count and lastQueryUrl state, but Kiro used one result bundle holding the type, county, count, and URL. I did not like that it went off spec, so I had the choice broken down in plain words before deciding. With separate state, the heading reads the dropdowns. If I searched Harris and then switched to Dallas, Harris's number would sit under a Dallas label. The bundle keeps each search's label and number together, so I accepted it. I still want the spec to match the code, so I plan to note it in design.md. I verified it myself: the card showed 12,095, the URL in the card matched the one Kiro printed, and the browser JSON returned "12095" as a string. That showed Number() and toLocaleString() did their jobs. I used my outside assistant for the step plan and to explain Kiro's choice, then made the call myself.</td></tr>
+  <tr><td><b>Reflection</b></td><td>
+    <ul>
+      <li>This time I followed the guide: a fresh session, the full Step 4 prompt from <code>prompts.md</code>, and the five spec and reference files attached with @ tags. In Step 3 I had used a short prompt. Kiro stopped after the diff and did not commit.</li>
+      <li>Because of my report format, it flagged its own deviation under Problems. The design called for separate count and lastQueryUrl state, but Kiro used one result bundle holding the type, county, count, and URL. I did not like that it went off spec, so I had the choice broken down in plain words before deciding. With separate state, the heading reads the dropdowns. If I searched Harris and then switched to Dallas, Harris's number would sit under a Dallas label. The bundle keeps each search's label and number together, so I accepted it.</li>
+      <li>I still wanted the spec to match the code, so I updated <code>design.md</code> in its own commit. When I did, Kiro also flagged that the county row said Title Case while the code stores the all caps value, so I had that fixed too. I left the success row for task 5.</li>
+      <li>I verified it myself: the card showed 12,095, the URL in the card matched the one Kiro printed, and the browser JSON returned "12095" as a string. That showed Number() and toLocaleString() did their jobs.</li>
+      <li>I used my outside assistant for the step plan and to explain Kiro's choice, then made the call myself.</li>
+    </ul>
+  </td></tr>
   <tr><td><b>Explained</b></td><td>
     <b>Entry 5 · Task 4 holder count and result card</b>
     <ul>
