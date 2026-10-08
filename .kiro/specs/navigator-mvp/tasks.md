@@ -13,7 +13,7 @@ How to run these tasks (read first):
 - Task 0 (MVP map increment 1: folder, git, one liner, privacy rule, find the HVAC
   string) is done by hand before task 1. No Kiro write.
 
-- [ ] 1. Scaffold Vite + React + Tailwind; blank page runs
+- [x] 1. Scaffold Vite + React + Tailwind; blank page runs
   - Maps to: MVP map increment 2 "Scaffold Vite React Tailwind" · Daily guide step 1
   - Moves: Build skill, Control
   - Do: Vite React (JavaScript) app in the repo root, Tailwind v4 via `@tailwindcss/vite`,
@@ -27,7 +27,7 @@ How to run these tasks (read first):
   - Commit: `chore: scaffold vite react tailwind`
   - _Requirements: 1.1, 1.2, 1.3, 8.1_
 
-- [ ] 2. tdlr.js: fetch license types; verify against the browser URL
+- [x] 2. tdlr.js: fetch license types; verify against the browser URL
   - Maps to: MVP map increment 3 "tdlr fetch license types" · Daily guide step 2
   - Moves: Build skill, Control
   - Do: create `src/api/tdlr.js` with `DATASET_URL`, `HVAC_TYPES`, `quote()`,
@@ -40,7 +40,7 @@ How to run these tasks (read first):
   - Commit: `feat: fetch license types from TDLR`
   - _Requirements: 2.1, 6.1, 6.2_
 
-- [ ] 3. License picker filled from live data
+- [x] 3. License picker filled from live data
   - Maps to: MVP map increment 4 "License picker from live data" · Daily guide step 3
   - Moves: Build skill, Control
   - Do: `src/components/LicensePicker.jsx` (form, two labeled selects, hints, submit
@@ -69,6 +69,7 @@ How to run these tasks (read first):
     for the URL in the card), the URL in the card opened in a browser gives the same
     number, and the value is not shown as a raw string or `NaN`.
   - Commit: `feat: holder count and result card`
+  - Log entry: Joseph adds the `PROMPT_LOG.md` entry for this task before starting task 5.
   - _Requirements: 3.2, 4.1, 4.2, 4.3, 4.4, 4.5_
 
 - [ ] 5. Status messages: loading, error with status code, empty
@@ -83,6 +84,7 @@ How to run these tasks (read first):
   - Done when: Loving shows the empty state, `?break=column` shows "(error 400)",
     DevTools Offline shows "no connection", Try again recovers, nothing crashes.
   - Commit: `feat: loading, empty, and error states`
+  - Log entry: Joseph adds the `PROMPT_LOG.md` entry for this task before starting task 6.
   - _Requirements: 2.5, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7_
 
 - [ ] 6. Light layout, README, screenshot, push to GitHub
@@ -96,4 +98,5 @@ How to run these tasks (read first):
   - Done when: keyboard only run works, every diff hunk is styling or docs only, README
     steps work from a fresh clone, Joseph pushed to GitHub. FREEZE: stop and rehearse.
   - Commit: `docs: readme, screenshot, light layout` then Joseph runs `git push`
+  - Log entry: Joseph adds the `PROMPT_LOG.md` entry for this task and fills Friday submit.
   - _Requirements: 6.4, 7.1, 7.2, 7.3, 7.4_
