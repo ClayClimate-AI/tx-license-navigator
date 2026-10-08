@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
-import { fetchLicenseTypes } from './api/tdlr.js'
+import { buildCountUrl, fetchHolderCount, fetchLicenseTypes } from './api/tdlr.js'
 import LicensePicker from './components/LicensePicker.jsx'
+import ResultCard from './components/ResultCard.jsx'
+import { COUNTIES } from './data/counties.js'
 
 const DEFAULT_TYPE = 'A/C Technician'
 
@@ -10,6 +12,12 @@ export default function App() {
   const [type, setType] = useState('')
   const [county, setCounty] = useState('')
   const [fieldError, setFieldError] = useState(null)
+  // Temporary flags for task 4. Task 5 replaces them with the single status value.
+  const [checking, setChecking] = useState(false)
+  const [countError, setCountError] = useState(null)
+  // Snapshot of the search that produced the number, so the heading stays correct
+  // even if the visitor changes a select afterwards.
+  const [result, setResult] = useState(null)
 
   useEffect(() => {
     // Ignore flag so React StrictMode's double effect run in dev only applies one result.
@@ -39,13 +47,26 @@ export default function App() {
     if (value) setFieldError(null)
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!county) {
       setFieldError('Choose a county.')
       return
     }
     setFieldError(null)
-    // The count fetch is added in task 4.
+    setCountError(null)
+    setResult(null)
+    setChecking(true)
+
+    const countyLabel = COUNTIES.find((c) => c.value === county)?.label ?? county
+    const queryUrl = buildCountUrl(type, county)
+    try {
+      const count = await fetchHolderCount(type, county)
+      setResult({ type, countyLabel, count, queryUrl })
+    } catch (err) {
+      setCountError(err.status ?? 'no connection')
+    } finally {
+      setChecking(false)
+    }
   }
 
   return (
@@ -58,9 +79,19 @@ export default function App() {
         onTypeChange={setType}
         onCountyChange={handleCountyChange}
         onSubmit={handleSubmit}
-        busy={typesLoading}
+        busy={typesLoading || checking}
         fieldError={fieldError}
       />
+      {checking && <p>Checking…</p>}
+      {countError !== null && <p>We could not reach the Texas data service. (error {countError})</p>}
+      {result && (
+        <ResultCard
+          type={result.type}
+          county={result.countyLabel}
+          count={result.count}
+          queryUrl={result.queryUrl}
+        />
+      )}
     </main>
   )
 }
