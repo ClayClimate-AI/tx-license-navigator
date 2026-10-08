@@ -104,6 +104,7 @@ classDef ui    fill:#15803d,color:#fff,stroke:#86efac
 classDef css   fill:#c2410c,color:#fff,stroke:#fdba74
 classDef tool  fill:#7e22ce,color:#fff,stroke:#d8b4fe
 classDef deps  fill:#a16207,color:#fff,stroke:#fde68a
+classDef api   fill:#78350f,color:#fff,stroke:#d6a77a
 ```
 
 - Node labels are plain descriptions of what each file does in the code. If Joseph

@@ -36,5 +36,6 @@ inclusion: always
 - No parallel agents, no subagents, no "Run all Tasks", no autonomous spec runs.
 
 ## Joseph's graded writing
-- Do not write or edit `PROMPT_LOG.md` entries, reflections, demo narration, or the
-  "change I will explain / mistake I caught" line. You may point out facts he can log.
+- Agents may fill verified facts in `PROMPT_LOG.md`. Agents never write or change
+  Reflection or Explained.
+- Do not write demo narration or the "change I will explain / mistake I caught" line.

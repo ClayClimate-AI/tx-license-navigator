@@ -27,6 +27,7 @@ Use plain language. Keep technical terms, but explain them briefly.
   ```
 - Never use `git add .` and never add `README.md`.
 - Then name the next task id from tasks.md.
+- After a feat commit, remind Joseph to add the PROMPT_LOG entry before the next task.
 
 ## Rules
 - Never commit or push unless Joseph asks you to.

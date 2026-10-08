@@ -17,7 +17,7 @@ tx-second-chance/
 │   ├── prompts.md           one prompt per MVP step
 │   ├── prompt-log-template.md
 │   └── screenshot.png       added in task 6
-├── PROMPT_LOG.md            Joseph writes this himself (graded). Agents never edit it.
+├── PROMPT_LOG.md            graded log. Agents fill verified facts only (see Never edit).
 ├── README.md                what it is, API URL, how to run, privacy note
 ├── .gitignore               node_modules, dist, .env
 ├── index.html
@@ -48,6 +48,7 @@ tx-second-chance/
 - Status values are exactly: `'idle' | 'loading' | 'success' | 'empty' | 'error'`.
 
 ## Never edit
-- `PROMPT_LOG.md` (Joseph's graded reflections).
+- Reflection and Explained in `PROMPT_LOG.md`. Agents may fill verified facts in
+  `PROMPT_LOG.md`. Agents never write or change Reflection or Explained.
 - `docs/reference/*` (copies of Joseph's guides).
 - `.kiro/steering/*` unless Joseph asks for a steering change.
