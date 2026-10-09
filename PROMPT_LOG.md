@@ -19,7 +19,7 @@
 
 <table>
   <tr><th align="left">Field</th><th align="left">Details</th></tr>
-  <tr><td><b>One liner</b></td><td></td></tr>
+  <tr><td><b>One liner</b></td><td>Second Chance License Navigator shows how many people hold an HVAC license in any Texas county, using live TDLR data, so job seekers can judge local demand before they train.</td></tr>
   <tr><td><b>Privacy</b></td><td>counts only, never a personal license row</td></tr>
   <tr><td><b>Tools</b></td><td>Kiro CLI · claude-opus-5.5</td></tr>
 </table>
