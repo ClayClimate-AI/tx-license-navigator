@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { buildCountUrl, fetchHolderCount, fetchLicenseTypes } from './api/tdlr.js'
 import LicensePicker from './components/LicensePicker.jsx'
 import ResultCard from './components/ResultCard.jsx'
+import SiteHeader from './components/SiteHeader.jsx'
+import SourceNote from './components/SourceNote.jsx'
 import StatusMessage from './components/StatusMessage.jsx'
+import TrustNote from './components/TrustNote.jsx'
 import { COUNTIES } from './data/counties.js'
 
 const DEFAULT_TYPE = 'A/C Technician'
@@ -97,39 +100,60 @@ export default function App() {
     }
   }
 
+  // After a search finishes, move focus to the result heading so keyboard and screen reader
+  // users land on the answer.
+  const resultHeadingRef = useRef(null)
+  useEffect(() => {
+    if (status === 'success' || status === 'empty' || status === 'error') {
+      resultHeadingRef.current?.focus()
+    }
+  }, [status])
+
   // Requirement 2.5: never show an empty, unusable form when the type list failed.
   const typesFailed = !typesLoading && licenseTypes.length === 0
 
   return (
-    <main>
-      <h1 className="text-3xl">Texas Second Chance License Navigator</h1>
-      {!typesFailed && (
-        <LicensePicker
-          types={licenseTypes}
-          type={type}
-          county={county}
-          onTypeChange={setType}
-          onCountyChange={handleCountyChange}
-          onSubmit={handleSubmit}
-          busy={typesLoading || status === 'loading'}
-          fieldError={fieldError}
+    <div className="min-h-screen bg-[#F3F5F8] text-[#1B2733]">
+      <SiteHeader />
+      <main className="mx-auto max-w-3xl px-4 py-6 md:px-6">
+        <h1 className="text-[26px] font-bold leading-tight text-[#14304F]">
+          Look up HVAC license demand by county
+        </h1>
+        <p className="mt-1.5 text-[16px] text-[#2B3A49]">
+          See how many people hold an HVAC license in a Texas county. Use it to judge local demand
+          before you train or apply.
+        </p>
+        <TrustNote />
+        {!typesFailed && (
+          <LicensePicker
+            types={licenseTypes}
+            type={type}
+            county={county}
+            onTypeChange={setType}
+            onCountyChange={handleCountyChange}
+            onSubmit={handleSubmit}
+            busy={typesLoading || status === 'loading'}
+            fieldError={fieldError}
+          />
+        )}
+        <StatusMessage
+          status={status}
+          type={result?.type}
+          county={result?.countyLabel}
+          errorCode={errorCode}
         />
-      )}
-      <StatusMessage
-        status={status}
-        type={result?.type}
-        county={result?.countyLabel}
-        errorCode={errorCode}
-      />
-      <ResultCard
-        status={status}
-        type={result?.type}
-        county={result?.countyLabel}
-        count={result?.count}
-        queryUrl={result?.queryUrl}
-        errorCode={errorCode}
-        onRetry={handleRetry}
-      />
-    </main>
+        <ResultCard
+          status={status}
+          type={result?.type}
+          county={result?.countyLabel}
+          count={result?.count}
+          queryUrl={result?.queryUrl}
+          errorCode={errorCode}
+          onRetry={handleRetry}
+          headingRef={resultHeadingRef}
+        />
+      </main>
+      <SourceNote />
+    </div>
   )
 }

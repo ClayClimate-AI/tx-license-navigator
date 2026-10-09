@@ -16,7 +16,11 @@ export default function StatusMessage({ status, type, county, errorCode }) {
   }
 
   return (
-    <p role="status" aria-live="polite">
+    <p
+      role="status"
+      aria-live="polite"
+      className="mt-4 rounded bg-white/70 px-3 py-2 text-[15px] font-semibold text-[#4A5A6A]"
+    >
       {text}
     </p>
   )
