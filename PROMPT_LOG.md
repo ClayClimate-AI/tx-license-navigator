@@ -497,6 +497,93 @@ flowchart TD
 
 ---
 
+## Entry 7 · Task 6 light layout, README, screenshot
+
+*Oct 9 · ~07:11 to 07:31 CT*
+
+<table>
+  <tr><th align="left">Field</th><th align="left">Details</th></tr>
+  <tr><td><b>Tool</b></td><td>Kiro CLI · claude-opus-5.5 · supervised</td></tr>
+  <tr><td><b>Asked</b></td><td>
+    <ul>
+      <li>"Fix only the uneven dropdowns." Each field wrapper <code>flex flex-col</code>, each select <code>mt-auto</code>. Tailwind classes only, show the diff, do not commit</li>
+      <li>"Verify task 6 before I commit." Read only: <code>tdlr.js</code> diff empty, list non class changes in 🟩 <code>src/App.jsx</code>, components classes or markup only, README has six items, <code>docs/kit/</code> and <code>docs/reference/navigator-uiux-sample.html</code> not in the commit list</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Context</b></td><td>
+    <ul>
+      <li>steering (always on files)</li>
+      <li><code>tasks.md</code></li>
+      <li><code>mvp-map.md</code></li>
+      <li><code>README.md</code></li>
+      <li>🟩 <code>src/components/LicensePicker.jsx</code></li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Changed</b></td><td>
+    5 new files, 4 edited · 316 insertions, 118 deletions
+    <ul>
+      <li><code>README.md</code> (new)</li>
+      <li><code>docs/screenshot.png</code> (new)</li>
+      <li><code>src/components/SiteHeader.jsx</code> (new)</li>
+      <li><code>src/components/TrustNote.jsx</code> (new)</li>
+      <li><code>src/components/SourceNote.jsx</code> (new)</li>
+      <li>🟩 <code>src/App.jsx</code> (modified)</li>
+      <li>🟩 <code>src/components/LicensePicker.jsx</code> (modified)</li>
+      <li>🟩 <code>src/components/ResultCard.jsx</code> (modified)</li>
+      <li>🟩 <code>src/components/StatusMessage.jsx</code> (modified)</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Decision</b></td><td>accepted. Kiro flagged three copy changes under Problems: the new <code>h1</code> "Look up HVAC license demand by county", the intro paragraph in 🟩 <code>src/App.jsx</code>, and the "Result" label in 🟩 <code>src/components/ResultCard.jsx</code>. Reviewed and kept</td></tr>
+  <tr><td><b>Verified</b></td><td>
+    <ul>
+      <li>~07:12 CT · <code>npm run build</code> passed after the dropdown fix</li>
+      <li>~07:21 CT · <code>git diff src/api/tdlr.js</code> printed nothing</li>
+      <li>~07:21 CT · component diffs were classes or markup only, plus the focus move to the result heading</li>
+      <li>~07:21 CT · <code>README.md</code> has all six items: what it is, API URL, the two example query URLs from <code>mvp-map.md</code>, <code>npm install</code> and <code>npm run dev</code>, privacy rule, <code>docs/screenshot.png</code> link</li>
+      <li>~07:21 CT · <code>docs/kit/</code> and <code>docs/reference/navigator-uiux-sample.html</code> untracked, not in the commit</li>
+      <li>by 07:31 CT · <code>docs/screenshot.png</code> shows A/C Contractor in Lubbock = 231, with both selects lined up under a wrapped hint (<code>flex flex-col</code> + <code>mt-auto</code>)</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Commit</b></td><td><code>e3ab9db</code> docs: readme, screenshot, light layout</td></tr>
+  <tr><td><b>Reflection</b></td><td>
+    <ul>
+      <li>I copied <code>navigator-uiux-sample.html</code> into <code>docs/reference</code> because Kiro's @ picker only reads files inside the repo. The Downloads path stayed plain text.</li>
+      <li>I moved the kit <code>README</code> to <code>docs/kit</code> first so task 6 could write the real <code>README</code> without overwriting it.</li>
+      <li>Before committing I had Kiro run a read only check: 🟫 <code>tdlr.js</code> had no diff, and the other diffs were classes, markup, and the focus move.</li>
+      <li>Kiro flagged three copy changes outside "styling only": the new h1, the intro paragraph, and the "Result" label. I reviewed them against the sample and kept them because they make the page clearer and touch no logic.</li>
+      <li>The License type hint wrapped to two lines, which pushed that dropdown lower than County. I asked for flex-col and mt-auto in 🟩 <code>LicensePicker</code> only, and checked that both now line up.</li>
+      <li>The screenshot rename failed at first because macOS puts a hidden special space before "AM". A wildcard mv fixed it.</li>
+      <li>I committed, then logged, then pushed, following the loop.</li>
+    </ul>
+  </td></tr>
+  <tr><td><b>Explained</b></td><td>
+    <b>Entry 7 · Task 6 light layout, README, screenshot</b>
+    <ul>
+      <li>Task 6 is the light layout. <code>SiteHeader</code>, <code>TrustNote</code>, and <code>SourceNote</code> add the header, the counts only privacy note, and the data source.</li>
+      <li>The look follows <code>navigator-uiux-sample.html</code>, done with Tailwind only and no new packages.</li>
+      <li>After each search, focus moves to the result heading so keyboard and screen reader users land on the answer.</li>
+      <li>The <code>README</code> covers what the app is, the TDLR API URL, two example query URLs, how to run it, the privacy rule, and the screenshot.</li>
+      <li>No fetch or status logic changed. This is the freeze point for the MVP.</li>
+    </ul>
+  </td></tr>
+</table>
+
+### Entry 7 call graph
+
+```mermaid
+flowchart TD
+  A[src/App.jsx<br/>page layout, moves focus to the result heading]:::ui --> SH[src/components/SiteHeader.jsx<br/>header landmark and site name]:::ui
+  A --> TN[src/components/TrustNote.jsx<br/>counts only promise]:::ui
+  A --> P[src/components/LicensePicker.jsx<br/>two selects lined up with flex col and mt auto]:::ui
+  A --> S[src/components/StatusMessage.jsx<br/>styled status line]:::ui
+  A --> R[src/components/ResultCard.jsx<br/>styled panels, heading takes focus]:::ui
+  A --> SN[src/components/SourceNote.jsx<br/>dataset link, not legal advice]:::ui
+
+  classDef ui fill:#15803d,color:#fff,stroke:#86efac
+```
+
+---
+
 ## Lesson asks
 
 <table>
