@@ -2,7 +2,6 @@
 
 A one page web app for people with a criminal record who are deciding whether an HVAC trade is worth training for. Pick a Texas TDLR license type (default `A/C Technician`) and a county, and the app shows how many people hold that license with that county listed as their business county. More holders usually means more shops and more hiring nearby. A count is not a job listing.
 
-![Screenshot of the navigator showing a result card](docs/screenshot.png)
 
 ## Data source
 
