@@ -599,6 +599,6 @@ flowchart TD
 
 <table>
   <tr><th align="left">Field</th><th align="left">Details</th></tr>
-  <tr><td><b>Change I will explain</b></td><td></td></tr>
-  <tr><td><b>Mistake I caught</b></td><td></td></tr>
+  <tr><td><b>Change I will explain</b></td><td>the result bundle from task 4. Kiro stored type, county, count, and URL together so the heading and number always match one search, and I updated <code>design.md</code> to match the code</td></tr>
+  <tr><td><b>Mistake I caught</b></td><td>the first "(no connection)" test was still on <code>?break=column</code>, so it wasn't a clean check. I redid it on the base URL with only the count request blocked.</td></tr>
 </table>
